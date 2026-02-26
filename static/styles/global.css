@@ -1,0 +1,105 @@
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f6f8fa;
+    --bg-tertiary: #f0f2f5;
+    --text-primary: #1f2328;
+    --text-secondary: #656d76;
+    --border-color: #d1d9e0;
+    --accent-color: #0969da;
+    --status-bar-bg: #f6f8fa;
+    --sidebar-bg: #f6f8fa;
+    --editor-bg: #ffffff;
+    --splitpane-divider: #d1d9e0;
+    --zoom: 1;
+    color-scheme: light;
+}
+
+.dark {
+    --bg-primary: #0d1117;
+    --bg-secondary: #161b22;
+    --bg-tertiary: #1c2128;
+    --text-primary: #e6edf3;
+    --text-secondary: #9198a1;
+    --border-color: #30363d;
+    --accent-color: #58a6ff;
+    --status-bar-bg: #161b22;
+    --sidebar-bg: #161b22;
+    --editor-bg: #0d1117;
+    --splitpane-divider: #30363d;
+    color-scheme: dark;
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    overscroll-behavior: none;
+    touch-action: manipulation;
+    -webkit-overflow-scrolling: touch;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    color: var(--text-primary);
+    background: var(--bg-primary);
+}
+
+#app {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.splitpanes {
+    background: var(--bg-primary) !important;
+}
+
+.splitpanes__splitter {
+    background: var(--splitpane-divider) !important;
+    min-width: 4px !important;
+    min-height: 4px !important;
+}
+
+/* CodeMirror theme overrides */
+.cm-editor {
+    height: 100%;
+    font-size: calc(14px * var(--zoom));
+}
+.cm-editor .cm-scroller {
+    font-family: var(--preview-font, 'SF Mono', SFMono-Regular, Consolas, 'Liberation Mono', Menlo, monospace);
+}
+.cm-editor.cm-focused {
+    outline: none;
+}
+.dark .cm-editor {
+    background-color: var(--editor-bg);
+}
+.dark .cm-editor .cm-gutters {
+    background-color: var(--bg-secondary);
+    border-color: var(--border-color);
+    color: var(--text-secondary);
+}
+.dark .cm-editor .cm-activeLineGutter {
+    background-color: var(--bg-tertiary);
+}
+.dark .cm-editor .cm-activeLine {
+    background-color: rgba(255, 255, 255, 0.04);
+}
+.dark .cm-editor .cm-cursor {
+    border-left-color: var(--text-primary);
+}
+.dark .cm-editor .cm-selectionBackground,
+.dark .cm-editor.cm-focused .cm-selectionBackground {
+    background: rgba(56, 139, 253, 0.3) !important;
+}
+
+/* Highlight.js overrides for dark mode in preview */
+.dark .hljs {
+    background: #161b22 !important;
+    color: #e6edf3 !important;
+}
