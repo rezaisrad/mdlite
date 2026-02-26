@@ -33,6 +33,13 @@
       "icons/128x128@2x.png",
       "icons/icon.icns",
       "icons/icon.ico"
-    ]
+    ],
+    "createUpdaterArtifacts": true
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEZBMDRFNDNERDQ2NTk0M0UKUldRK2xHWFVQZVFFK2ludDZ3ejlsWlluSXhZbjJpdjlWa1pXOHB2dVg2ZXBNL2lZMklYRCt0RlUK",
+      "endpoints": []
+    }
   }
 }
