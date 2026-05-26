@@ -43,6 +43,13 @@
           "txt"
         ],
         "mimeType": "text/markdown"
+      },
+      {
+        "ext": [
+          "yml",
+          "yaml"
+        ],
+        "mimeType": "application/x-yaml"
       }
     ]
   },
