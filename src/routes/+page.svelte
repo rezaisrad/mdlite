@@ -337,7 +337,18 @@
 	onMount(() => {
 		const cleanups: Array<() => void> = [];
 
-		restoreSession();
+		(async () => {
+			const pendingFile = await invoke<string | null>('get_pending_file');
+			if (pendingFile) {
+				await openFile(pendingFile);
+			} else {
+				await restoreSession();
+			}
+		})();
+
+		listen<string>('open-file', async (event) => {
+			await openFile(event.payload);
+		}).then((unlisten) => cleanups.push(unlisten));
 
 		listenMenuEvents(handleMenuAction).then((unlisten) => cleanups.push(unlisten));
 
