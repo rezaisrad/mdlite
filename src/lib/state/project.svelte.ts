@@ -19,7 +19,7 @@ async function loadEntries(dirPath: string): Promise<TreeNode[]> {
 				path: await join(dirPath, entry.name),
 				isDirectory: true,
 			});
-		} else if (/\.(md|markdown)$/i.test(entry.name)) {
+		} else if (/\.(md|markdown|ya?ml)$/i.test(entry.name)) {
 			nodes.push({
 				name: entry.name,
 				path: await join(dirPath, entry.name),

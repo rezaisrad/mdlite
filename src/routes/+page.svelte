@@ -18,6 +18,7 @@
 	import { project } from "$lib/state/project.svelte";
 	import { listenMenuEvents, type MenuAction } from "$lib/menu-handler";
 	import { formatMarkdown } from "$lib/markdown-formatter";
+	import { yamlToMarkdown } from "$lib/yaml-to-markdown";
 
 	const appWindow = getCurrentWindow();
 	let editorRef = $state<EditorView | null>(null);
@@ -68,23 +69,36 @@
 
 	async function fileOpen() {
 		const path = await open({
-			filters: [{ name: "Markdown", extensions: ["md", "markdown", "txt"] }],
+			filters: [
+				{ name: "Markdown", extensions: ["md", "markdown", "txt"] },
+				{ name: "YAML", extensions: ["yml", "yaml"] },
+			],
 		});
 		if (!path) return;
 		await openFile(path as string);
 	}
 
+	function isYamlFile(path: string): boolean {
+		return /\.(ya?ml)$/i.test(path);
+	}
+
 	async function openFile(path: string) {
 		try {
-			const content = await invoke<string>("read_file", { path });
+			const raw = await invoke<string>("read_file", { path });
 			if (doc.filePath) {
 				await invoke("stop_watching");
 			}
-			doc.setContent(content, false);
-			doc.setFilePath(path);
-			doc.markClean();
-			ignoreNextFileChange = true;
-			await invoke("start_watching", { path });
+			if (isYamlFile(path)) {
+				doc.setContent(yamlToMarkdown(raw), false);
+				doc.setFilePath(null);
+				doc.markClean();
+			} else {
+				doc.setContent(raw, false);
+				doc.setFilePath(path);
+				doc.markClean();
+				ignoreNextFileChange = true;
+				await invoke("start_watching", { path });
+			}
 		} catch (e) {
 			console.error("Failed to open file:", e);
 		}
@@ -263,7 +277,7 @@
 		const file = files[0];
 		const ext = file.name.split(".").pop()?.toLowerCase();
 
-		if (ext === "md" || ext === "markdown" || ext === "txt") {
+		if (ext === "md" || ext === "markdown" || ext === "txt" || ext === "yml" || ext === "yaml") {
 			const path = (file as unknown as { path?: string }).path;
 			if (path) openFile(path);
 		} else if (["png", "jpg", "jpeg", "gif", "svg", "webp"].includes(ext ?? "")) {
