@@ -12,8 +12,10 @@
 	import SplitView from "$lib/components/SplitView.svelte";
 	import StatusBar from "$lib/components/StatusBar.svelte";
 	import OutlineSidebar from "$lib/components/OutlineSidebar.svelte";
+	import ProjectSidebar from "$lib/components/ProjectSidebar.svelte";
 	import ReloadDialog from "$lib/components/ReloadDialog.svelte";
 	import { doc, FONT_STACKS, type FontFamily } from "$lib/state/document.svelte";
+	import { project } from "$lib/state/project.svelte";
 	import { listenMenuEvents, type MenuAction } from "$lib/menu-handler";
 	import { formatMarkdown } from "$lib/markdown-formatter";
 
@@ -27,6 +29,7 @@
 	const STORAGE_FILEPATH = "mdlite:filePath";
 	const STORAGE_ZOOM = "mdlite:zoomLevel";
 	const STORAGE_FONT = "mdlite:fontFamily";
+	const STORAGE_PROJECT = "mdlite:projectPath";
 
 	let saveTimer: ReturnType<typeof setTimeout>;
 	$effect(() => {
@@ -85,6 +88,13 @@
 		} catch (e) {
 			console.error("Failed to open file:", e);
 		}
+	}
+
+	async function folderOpen() {
+		const path = await open({ directory: true, recursive: true });
+		if (!path) return;
+		await project.setRoot(path as string);
+		project.showSidebar = true;
 	}
 
 	function autoFormat() {
@@ -283,6 +293,9 @@
 			case "file_open":
 				fileOpen();
 				break;
+			case "file_open_folder":
+				folderOpen();
+				break;
 			case "file_save":
 				fileSave();
 				break;
@@ -334,6 +347,9 @@
 			case "view_sidebar":
 				doc.showSidebar = !doc.showSidebar;
 				break;
+			case "view_project_sidebar":
+				project.showSidebar = !project.showSidebar;
+				break;
 			case "view_zoom_in":
 				doc.zoomIn();
 				break;
@@ -361,6 +377,16 @@
 
 		const savedFont = localStorage.getItem(STORAGE_FONT);
 		if (savedFont && savedFont in FONT_STACKS) doc.fontFamily = savedFont as FontFamily;
+
+		const savedProject = localStorage.getItem(STORAGE_PROJECT);
+		if (savedProject) {
+			try {
+				await project.setRoot(savedProject);
+				project.showSidebar = true;
+			} catch {
+				localStorage.removeItem(STORAGE_PROJECT);
+			}
+		}
 
 		const savedFilePath = localStorage.getItem(STORAGE_FILEPATH);
 		const savedContent = localStorage.getItem(STORAGE_CONTENT);
@@ -434,6 +460,14 @@
 		appWindow.setTitle(doc.windowTitle);
 	});
 
+	$effect(() => {
+		if (project.rootPath) {
+			localStorage.setItem(STORAGE_PROJECT, project.rootPath);
+		} else {
+			localStorage.removeItem(STORAGE_PROJECT);
+		}
+	});
+
 	// Apply zoom level to CSS and persist
 	$effect(() => {
 		const zoom = doc.zoomLevel;
@@ -462,6 +496,9 @@
 <!-- svelte-ignore a11y_no_static_element_interactions -->
 <div class="app-container" ondrop={handleDrop} ondragover={handleDragOver}>
 	<div class="main-content">
+		{#if project.showSidebar && project.rootPath}
+			<ProjectSidebar onfileclick={openFile} />
+		{/if}
 		<div class="editor-area">
 			{#if doc.viewMode === "split"}
 				<SplitView>

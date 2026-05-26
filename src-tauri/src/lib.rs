@@ -60,6 +60,9 @@ fn build_menu(handle: &tauri::AppHandle) -> Result<(), tauri::Error> {
     let file_open = MenuItemBuilder::with_id("file_open", "Open…")
         .accelerator("CmdOrCtrl+O")
         .build(handle)?;
+    let file_open_folder = MenuItemBuilder::with_id("file_open_folder", "Open Folder…")
+        .accelerator("CmdOrCtrl+Shift+O")
+        .build(handle)?;
     let file_save = MenuItemBuilder::with_id("file_save", "Save")
         .accelerator("CmdOrCtrl+S")
         .build(handle)?;
@@ -79,6 +82,7 @@ fn build_menu(handle: &tauri::AppHandle) -> Result<(), tauri::Error> {
         .items(&[
             &file_new,
             &file_open,
+            &file_open_folder,
             &file_save,
             &file_save_as,
             &file_export_html,
@@ -154,6 +158,10 @@ fn build_menu(handle: &tauri::AppHandle) -> Result<(), tauri::Error> {
     let view_sidebar = MenuItemBuilder::with_id("view_sidebar", "Toggle Sidebar")
         .accelerator("CmdOrCtrl+\\")
         .build(handle)?;
+    let view_project_sidebar =
+        MenuItemBuilder::with_id("view_project_sidebar", "Toggle Project Sidebar")
+            .accelerator("CmdOrCtrl+Shift+\\")
+            .build(handle)?;
     let view_zoom_in = MenuItemBuilder::with_id("view_zoom_in", "Zoom In")
         .accelerator("CmdOrCtrl+=")
         .build(handle)?;
@@ -181,7 +189,13 @@ fn build_menu(handle: &tauri::AppHandle) -> Result<(), tauri::Error> {
         .build()?;
 
     let view_menu = SubmenuBuilder::new(handle, "View")
-        .items(&[&view_editor, &view_split, &view_preview, &view_sidebar])
+        .items(&[
+            &view_editor,
+            &view_split,
+            &view_preview,
+            &view_sidebar,
+            &view_project_sidebar,
+        ])
         .separator()
         .items(&[&view_zoom_in, &view_zoom_out, &view_zoom_reset])
         .separator()

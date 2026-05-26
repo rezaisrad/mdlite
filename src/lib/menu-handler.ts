@@ -3,6 +3,7 @@ import { listen } from "@tauri-apps/api/event";
 export type MenuAction =
 	| "file_new"
 	| "file_open"
+	| "file_open_folder"
 	| "file_save"
 	| "file_save_as"
 	| "file_export_html"
@@ -20,6 +21,7 @@ export type MenuAction =
 	| "view_split"
 	| "view_preview"
 	| "view_sidebar"
+	| "view_project_sidebar"
 	| "view_zoom_in"
 	| "view_zoom_out"
 	| "view_zoom_reset"
