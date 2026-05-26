@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { Splitpanes, Pane } from 'svelte-splitpanes';
-	import type { Snippet } from 'svelte';
+	import { Splitpanes, Pane } from "svelte-splitpanes";
+	import type { Snippet } from "svelte";
 
 	let {
 		editorPane,

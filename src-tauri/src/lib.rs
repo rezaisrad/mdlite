@@ -66,8 +66,8 @@ fn build_menu(handle: &tauri::AppHandle) -> Result<(), tauri::Error> {
     let file_save_as = MenuItemBuilder::with_id("file_save_as", "Save As…")
         .accelerator("CmdOrCtrl+Shift+S")
         .build(handle)?;
-    let file_export_html = MenuItemBuilder::with_id("file_export_html", "Export HTML…")
-        .build(handle)?;
+    let file_export_html =
+        MenuItemBuilder::with_id("file_export_html", "Export HTML…").build(handle)?;
     let file_export_pdf = MenuItemBuilder::with_id("file_export_pdf", "Print / PDF…")
         .accelerator("CmdOrCtrl+P")
         .build(handle)?;
@@ -164,19 +164,20 @@ fn build_menu(handle: &tauri::AppHandle) -> Result<(), tauri::Error> {
         .accelerator("CmdOrCtrl+0")
         .build(handle)?;
 
-    let font_system = MenuItemBuilder::with_id("font_system", "System")
-        .build(handle)?;
-    let font_serif = MenuItemBuilder::with_id("font_serif", "Serif")
-        .build(handle)?;
-    let font_classic = MenuItemBuilder::with_id("font_classic", "Classic")
-        .build(handle)?;
-    let font_humanist = MenuItemBuilder::with_id("font_humanist", "Humanist")
-        .build(handle)?;
-    let font_mono = MenuItemBuilder::with_id("font_mono", "Mono")
-        .build(handle)?;
+    let font_system = MenuItemBuilder::with_id("font_system", "System").build(handle)?;
+    let font_serif = MenuItemBuilder::with_id("font_serif", "Serif").build(handle)?;
+    let font_classic = MenuItemBuilder::with_id("font_classic", "Classic").build(handle)?;
+    let font_humanist = MenuItemBuilder::with_id("font_humanist", "Humanist").build(handle)?;
+    let font_mono = MenuItemBuilder::with_id("font_mono", "Mono").build(handle)?;
 
     let font_menu = SubmenuBuilder::new(handle, "Font")
-        .items(&[&font_system, &font_serif, &font_classic, &font_humanist, &font_mono])
+        .items(&[
+            &font_system,
+            &font_serif,
+            &font_classic,
+            &font_humanist,
+            &font_mono,
+        ])
         .build()?;
 
     let view_menu = SubmenuBuilder::new(handle, "View")

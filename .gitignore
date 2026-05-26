@@ -20,13 +20,15 @@ vite.config.ts.timestamp-*
 Thumbs.db
 
 # IDE
-.vscode/*
-!.vscode/extensions.json
+.vscode/
 .idea
 
 # Tauri build output
 src-tauri/target/
 src-tauri/gen/schemas
+
+# MCP
+.mcp.json
 
 # Claude Code
 .claude/settings.local.json

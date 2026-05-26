@@ -1,21 +1,21 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import { invoke } from '@tauri-apps/api/core';
-	import { listen } from '@tauri-apps/api/event';
-	import { open, save } from '@tauri-apps/plugin-dialog';
-	import { getCurrentWindow } from '@tauri-apps/api/window';
-	import type { EditorView } from '@codemirror/view';
-	import { openSearchPanel } from '@codemirror/search';
+	import { onMount } from "svelte";
+	import { invoke } from "@tauri-apps/api/core";
+	import { listen } from "@tauri-apps/api/event";
+	import { open, save } from "@tauri-apps/plugin-dialog";
+	import { getCurrentWindow } from "@tauri-apps/api/window";
+	import type { EditorView } from "@codemirror/view";
+	import { openSearchPanel } from "@codemirror/search";
 
-	import Editor from '$lib/components/Editor.svelte';
-	import Preview from '$lib/components/Preview.svelte';
-	import SplitView from '$lib/components/SplitView.svelte';
-	import StatusBar from '$lib/components/StatusBar.svelte';
-	import OutlineSidebar from '$lib/components/OutlineSidebar.svelte';
-	import ReloadDialog from '$lib/components/ReloadDialog.svelte';
-	import { doc, FONT_STACKS, type FontFamily } from '$lib/state/document.svelte';
-	import { listenMenuEvents, type MenuAction } from '$lib/menu-handler';
-	import { formatMarkdown } from '$lib/markdown-formatter';
+	import Editor from "$lib/components/Editor.svelte";
+	import Preview from "$lib/components/Preview.svelte";
+	import SplitView from "$lib/components/SplitView.svelte";
+	import StatusBar from "$lib/components/StatusBar.svelte";
+	import OutlineSidebar from "$lib/components/OutlineSidebar.svelte";
+	import ReloadDialog from "$lib/components/ReloadDialog.svelte";
+	import { doc, FONT_STACKS, type FontFamily } from "$lib/state/document.svelte";
+	import { listenMenuEvents, type MenuAction } from "$lib/menu-handler";
+	import { formatMarkdown } from "$lib/markdown-formatter";
 
 	const appWindow = getCurrentWindow();
 	let editorRef = $state<EditorView | null>(null);
@@ -23,10 +23,10 @@
 	let showReloadDialog = $state(false);
 	let ignoreNextFileChange = false;
 
-	const STORAGE_CONTENT = 'mdlite:content';
-	const STORAGE_FILEPATH = 'mdlite:filePath';
-	const STORAGE_ZOOM = 'mdlite:zoomLevel';
-	const STORAGE_FONT = 'mdlite:fontFamily';
+	const STORAGE_CONTENT = "mdlite:content";
+	const STORAGE_FILEPATH = "mdlite:filePath";
+	const STORAGE_ZOOM = "mdlite:zoomLevel";
+	const STORAGE_FONT = "mdlite:fontFamily";
 
 	let saveTimer: ReturnType<typeof setTimeout>;
 	$effect(() => {
@@ -54,9 +54,9 @@
 	// --- File operations ---
 
 	async function fileNew() {
-		if (doc.isDirty && !confirm('Discard unsaved changes?')) return;
+		if (doc.isDirty && !confirm("Discard unsaved changes?")) return;
 		if (doc.filePath) {
-			await invoke('stop_watching');
+			await invoke("stop_watching");
 		}
 		doc.reset();
 		localStorage.removeItem(STORAGE_CONTENT);
@@ -65,7 +65,7 @@
 
 	async function fileOpen() {
 		const path = await open({
-			filters: [{ name: 'Markdown', extensions: ['md', 'markdown', 'txt'] }],
+			filters: [{ name: "Markdown", extensions: ["md", "markdown", "txt"] }],
 		});
 		if (!path) return;
 		await openFile(path as string);
@@ -73,17 +73,17 @@
 
 	async function openFile(path: string) {
 		try {
-			const content = await invoke<string>('read_file', { path });
+			const content = await invoke<string>("read_file", { path });
 			if (doc.filePath) {
-				await invoke('stop_watching');
+				await invoke("stop_watching");
 			}
 			doc.setContent(content, false);
 			doc.setFilePath(path);
 			doc.markClean();
 			ignoreNextFileChange = true;
-			await invoke('start_watching', { path });
+			await invoke("start_watching", { path });
 		} catch (e) {
-			console.error('Failed to open file:', e);
+			console.error("Failed to open file:", e);
 		}
 	}
 
@@ -92,7 +92,7 @@
 			const formatted = formatMarkdown(doc.content);
 			doc.setContent(formatted);
 		} catch (e) {
-			console.error('Auto-format failed:', e);
+			console.error("Auto-format failed:", e);
 		}
 	}
 
@@ -104,45 +104,45 @@
 		try {
 			autoFormat();
 			ignoreNextFileChange = true;
-			await invoke('write_file', { path: doc.filePath, content: doc.content });
+			await invoke("write_file", { path: doc.filePath, content: doc.content });
 			doc.markClean();
 		} catch (e) {
-			console.error('Failed to save file:', e);
+			console.error("Failed to save file:", e);
 		}
 	}
 
 	async function fileSaveAs() {
 		const path = await save({
-			filters: [{ name: 'Markdown', extensions: ['md'] }],
+			filters: [{ name: "Markdown", extensions: ["md"] }],
 		});
 		if (!path) return;
 		try {
 			if (doc.filePath) {
-				await invoke('stop_watching');
+				await invoke("stop_watching");
 			}
 			ignoreNextFileChange = true;
 			doc.setFilePath(path);
-			await invoke('write_file', { path, content: doc.content });
+			await invoke("write_file", { path, content: doc.content });
 			doc.markClean();
-			await invoke('start_watching', { path });
+			await invoke("start_watching", { path });
 		} catch (e) {
-			console.error('Failed to save file:', e);
+			console.error("Failed to save file:", e);
 		}
 	}
 
 	async function fileExportHtml() {
 		const path = await save({
-			filters: [{ name: 'HTML', extensions: ['html'] }],
+			filters: [{ name: "HTML", extensions: ["html"] }],
 		});
 		if (!path) return;
 		try {
-			const html = await invoke<string>('export_html', {
+			const html = await invoke<string>("export_html", {
 				content: doc.content,
 				title: doc.fileName,
 			});
-			await invoke('write_file', { path, content: html });
+			await invoke("write_file", { path, content: html });
 		} catch (e) {
-			console.error('Failed to export HTML:', e);
+			console.error("Failed to export HTML:", e);
 		}
 	}
 
@@ -156,7 +156,9 @@
 		if (!editorRef) return;
 		openSearchPanel(editorRef);
 		if (focusReplace) {
-			const replaceField = editorRef.dom.querySelector<HTMLInputElement>('.cm-search input[name=replace]');
+			const replaceField = editorRef.dom.querySelector<HTMLInputElement>(
+				".cm-search input[name=replace]",
+			);
 			replaceField?.focus();
 		}
 	}
@@ -173,19 +175,19 @@
 		let cursorOffset: number;
 
 		switch (type) {
-			case 'bold':
+			case "bold":
 				insert = `**${selected}**`;
 				cursorOffset = selected ? insert.length : 2;
 				break;
-			case 'italic':
+			case "italic":
 				insert = `*${selected}*`;
 				cursorOffset = selected ? insert.length : 1;
 				break;
-			case 'code':
+			case "code":
 				insert = `\`${selected}\``;
 				cursorOffset = selected ? insert.length : 1;
 				break;
-			case 'link':
+			case "link":
 				insert = `[${selected}](url)`;
 				cursorOffset = selected ? selected.length + 2 : 1;
 				break;
@@ -209,7 +211,7 @@
 
 		if (lineText.startsWith(prefix)) {
 			view.dispatch({
-				changes: { from: line.from, to: line.from + prefix.length, insert: '' },
+				changes: { from: line.from, to: line.from + prefix.length, insert: "" },
 			});
 		} else {
 			view.dispatch({
@@ -222,7 +224,7 @@
 	// --- Sidebar heading click ---
 
 	function handleHeadingClick(charIndex: number) {
-		if (editorRef && (doc.viewMode === 'editor' || doc.viewMode === 'split')) {
+		if (editorRef && (doc.viewMode === "editor" || doc.viewMode === "split")) {
 			const pos = Math.min(charIndex, editorRef.state.doc.length);
 			editorRef.dispatch({
 				selection: { anchor: pos },
@@ -230,13 +232,13 @@
 			});
 			editorRef.focus();
 		}
-		if (previewRef && (doc.viewMode === 'preview' || doc.viewMode === 'split')) {
-			const headings = previewRef.querySelectorAll('h1, h2, h3, h4, h5, h6');
-			const lines = doc.content.substring(0, charIndex).split('\n');
+		if (previewRef && (doc.viewMode === "preview" || doc.viewMode === "split")) {
+			const headings = previewRef.querySelectorAll("h1, h2, h3, h4, h5, h6");
+			const lines = doc.content.substring(0, charIndex).split("\n");
 			const headingCount = lines.filter((l) => /^#{1,6}\s/.test(l)).length;
 			const target = headings[headingCount];
 			if (target) {
-				target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+				target.scrollIntoView({ behavior: "smooth", block: "start" });
 			}
 		}
 	}
@@ -249,15 +251,15 @@
 		if (!files?.length) return;
 
 		const file = files[0];
-		const ext = file.name.split('.').pop()?.toLowerCase();
+		const ext = file.name.split(".").pop()?.toLowerCase();
 
-		if (ext === 'md' || ext === 'markdown' || ext === 'txt') {
-			const path = (file as any).path;
+		if (ext === "md" || ext === "markdown" || ext === "txt") {
+			const path = (file as unknown as { path?: string }).path;
 			if (path) openFile(path);
-		} else if (['png', 'jpg', 'jpeg', 'gif', 'svg', 'webp'].includes(ext ?? '')) {
-			const path = (file as any).path;
+		} else if (["png", "jpg", "jpeg", "gif", "svg", "webp"].includes(ext ?? "")) {
+			const path = (file as unknown as { path?: string }).path;
 			if (path && editorRef) {
-				const name = file.name.replace(/\.[^.]+$/, '');
+				const name = file.name.replace(/\.[^.]+$/, "");
 				const md = `![${name}](${path})`;
 				const pos = editorRef.state.selection.main.head;
 				editorRef.dispatch({
@@ -275,35 +277,79 @@
 
 	function handleMenuAction(action: MenuAction) {
 		switch (action) {
-			case 'file_new': fileNew(); break;
-			case 'file_open': fileOpen(); break;
-			case 'file_save': fileSave(); break;
-			case 'file_save_as': fileSaveAs(); break;
-			case 'file_export_html': fileExportHtml(); break;
-			case 'file_export_pdf': fileExportPdf(); break;
-			case 'edit_find': editorFind(false); break;
-			case 'edit_replace': editorFind(true); break;
-			case 'fmt_bold': formatCommand('bold'); break;
-			case 'fmt_italic': formatCommand('italic'); break;
-			case 'fmt_code': formatCommand('code'); break;
-			case 'fmt_heading': toggleLinePrefix('# '); break;
-			case 'fmt_link': formatCommand('link'); break;
-			case 'fmt_list': toggleLinePrefix('- '); break;
-			case 'fmt_auto_format': autoFormat(); break;
-			case 'view_editor': doc.viewMode = 'editor'; break;
-			case 'view_split': doc.viewMode = 'split'; break;
-			case 'view_preview': doc.viewMode = 'preview'; break;
-			case 'view_sidebar': doc.showSidebar = !doc.showSidebar; break;
-		case 'view_zoom_in': doc.zoomIn(); break;
-		case 'view_zoom_out': doc.zoomOut(); break;
-		case 'view_zoom_reset': doc.zoomReset(); break;
-		case 'font_system':
-		case 'font_serif':
-		case 'font_classic':
-		case 'font_humanist':
-		case 'font_mono':
-			doc.fontFamily = action.replace('font_', '') as FontFamily;
-			break;
+			case "file_new":
+				fileNew();
+				break;
+			case "file_open":
+				fileOpen();
+				break;
+			case "file_save":
+				fileSave();
+				break;
+			case "file_save_as":
+				fileSaveAs();
+				break;
+			case "file_export_html":
+				fileExportHtml();
+				break;
+			case "file_export_pdf":
+				fileExportPdf();
+				break;
+			case "edit_find":
+				editorFind(false);
+				break;
+			case "edit_replace":
+				editorFind(true);
+				break;
+			case "fmt_bold":
+				formatCommand("bold");
+				break;
+			case "fmt_italic":
+				formatCommand("italic");
+				break;
+			case "fmt_code":
+				formatCommand("code");
+				break;
+			case "fmt_heading":
+				toggleLinePrefix("# ");
+				break;
+			case "fmt_link":
+				formatCommand("link");
+				break;
+			case "fmt_list":
+				toggleLinePrefix("- ");
+				break;
+			case "fmt_auto_format":
+				autoFormat();
+				break;
+			case "view_editor":
+				doc.viewMode = "editor";
+				break;
+			case "view_split":
+				doc.viewMode = "split";
+				break;
+			case "view_preview":
+				doc.viewMode = "preview";
+				break;
+			case "view_sidebar":
+				doc.showSidebar = !doc.showSidebar;
+				break;
+			case "view_zoom_in":
+				doc.zoomIn();
+				break;
+			case "view_zoom_out":
+				doc.zoomOut();
+				break;
+			case "view_zoom_reset":
+				doc.zoomReset();
+				break;
+			case "font_system":
+			case "font_serif":
+			case "font_classic":
+			case "font_humanist":
+			case "font_mono":
+				doc.fontFamily = action.replace("font_", "") as FontFamily;
+				break;
 		}
 	}
 
@@ -320,12 +366,12 @@
 		const savedContent = localStorage.getItem(STORAGE_CONTENT);
 		if (savedFilePath) {
 			try {
-				const content = await invoke<string>('read_file', { path: savedFilePath });
+				const content = await invoke<string>("read_file", { path: savedFilePath });
 				doc.setContent(content, false);
 				doc.setFilePath(savedFilePath);
 				doc.markClean();
 				ignoreNextFileChange = true;
-				await invoke('start_watching', { path: savedFilePath });
+				await invoke("start_watching", { path: savedFilePath });
 			} catch {
 				if (savedContent) {
 					doc.setContent(savedContent, false);
@@ -340,7 +386,7 @@
 		const cleanups: Array<() => void> = [];
 
 		(async () => {
-			const pendingFile = await invoke<string | null>('get_pending_file');
+			const pendingFile = await invoke<string | null>("get_pending_file");
 			if (pendingFile) {
 				await openFile(pendingFile);
 			} else {
@@ -348,13 +394,13 @@
 			}
 		})();
 
-		listen<string>('open-file', async (event) => {
+		listen<string>("open-file", async (event) => {
 			await openFile(event.payload);
 		}).then((unlisten) => cleanups.push(unlisten));
 
 		listenMenuEvents(handleMenuAction).then((unlisten) => cleanups.push(unlisten));
 
-		listen('file-changed', async () => {
+		listen("file-changed", async () => {
 			if (ignoreNextFileChange) {
 				ignoreNextFileChange = false;
 				return;
@@ -363,21 +409,23 @@
 		}).then((unlisten) => cleanups.push(unlisten));
 
 		// Unsaved changes warning on window close
-		appWindow.onCloseRequested(async (event) => {
-			if (doc.isDirty) {
-				if (!confirm('You have unsaved changes. Discard and close?')) {
-					event.preventDefault();
+		appWindow
+			.onCloseRequested(async (event) => {
+				if (doc.isDirty) {
+					if (!confirm("You have unsaved changes. Discard and close?")) {
+						event.preventDefault();
+					}
 				}
-			}
-		}).then((unlisten) => cleanups.push(unlisten));
+			})
+			.then((unlisten) => cleanups.push(unlisten));
 
 		const handleBeforeUnload = (e: BeforeUnloadEvent) => {
 			if (doc.isDirty) {
 				e.preventDefault();
 			}
 		};
-		window.addEventListener('beforeunload', handleBeforeUnload);
-		cleanups.push(() => window.removeEventListener('beforeunload', handleBeforeUnload));
+		window.addEventListener("beforeunload", handleBeforeUnload);
+		cleanups.push(() => window.removeEventListener("beforeunload", handleBeforeUnload));
 
 		return () => cleanups.forEach((fn) => fn());
 	});
@@ -389,14 +437,14 @@
 	// Apply zoom level to CSS and persist
 	$effect(() => {
 		const zoom = doc.zoomLevel;
-		document.documentElement.style.setProperty('--zoom', String(zoom / 100));
+		document.documentElement.style.setProperty("--zoom", String(zoom / 100));
 		localStorage.setItem(STORAGE_ZOOM, String(zoom));
 	});
 
 	// Apply font family to CSS and persist
 	$effect(() => {
 		const font = doc.fontFamily;
-		document.documentElement.style.setProperty('--preview-font', FONT_STACKS[font].css);
+		document.documentElement.style.setProperty("--preview-font", FONT_STACKS[font].css);
 		localStorage.setItem(STORAGE_FONT, font);
 	});
 
@@ -404,7 +452,7 @@
 	async function handleReload() {
 		showReloadDialog = false;
 		if (doc.filePath) {
-			const content = await invoke<string>('read_file', { path: doc.filePath });
+			const content = await invoke<string>("read_file", { path: doc.filePath });
 			doc.setContent(content, false);
 			doc.markClean();
 		}
@@ -415,7 +463,7 @@
 <div class="app-container" ondrop={handleDrop} ondragover={handleDragOver}>
 	<div class="main-content">
 		<div class="editor-area">
-			{#if doc.viewMode === 'split'}
+			{#if doc.viewMode === "split"}
 				<SplitView>
 					{#snippet editorPane()}
 						<Editor
@@ -429,7 +477,7 @@
 						<Preview content={doc.content} bind:previewRef />
 					{/snippet}
 				</SplitView>
-			{:else if doc.viewMode === 'editor'}
+			{:else if doc.viewMode === "editor"}
 				<Editor
 					content={doc.content}
 					onchange={handleEditorChange}

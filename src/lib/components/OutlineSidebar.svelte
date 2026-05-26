@@ -6,7 +6,7 @@
 	};
 
 	let {
-		content = '',
+		content = "",
 		onheadingclick,
 	}: {
 		content: string;
@@ -15,14 +15,14 @@
 
 	let headings = $derived.by(() => {
 		const items: HeadingItem[] = [];
-		const lines = content.split('\n');
+		const lines = content.split("\n");
 		let charIndex = 0;
 		for (const line of lines) {
 			const match = line.match(/^(#{1,6})\s+(.+)/);
 			if (match) {
 				items.push({
 					level: match[1].length,
-					text: match[2].replace(/#+\s*$/, '').trim(),
+					text: match[2].replace(/#+\s*$/, "").trim(),
 					index: charIndex,
 				});
 			}
@@ -96,10 +96,26 @@
 	.heading-item:hover {
 		background: var(--bg-tertiary);
 	}
-	.level-1 { padding-left: 12px; font-weight: 600; }
-	.level-2 { padding-left: 24px; }
-	.level-3 { padding-left: 36px; }
-	.level-4 { padding-left: 48px; font-size: 12px; }
-	.level-5 { padding-left: 60px; font-size: 12px; }
-	.level-6 { padding-left: 72px; font-size: 12px; }
+	.level-1 {
+		padding-left: 12px;
+		font-weight: 600;
+	}
+	.level-2 {
+		padding-left: 24px;
+	}
+	.level-3 {
+		padding-left: 36px;
+	}
+	.level-4 {
+		padding-left: 48px;
+		font-size: 12px;
+	}
+	.level-5 {
+		padding-left: 60px;
+		font-size: 12px;
+	}
+	.level-6 {
+		padding-left: 72px;
+		font-size: 12px;
+	}
 </style>

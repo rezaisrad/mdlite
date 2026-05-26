@@ -1,5 +1,5 @@
-import { EditorView, keymap } from '@codemirror/view';
-import { EditorState, type Extension } from '@codemirror/state';
+import { EditorView, keymap } from "@codemirror/view";
+import { type Extension } from "@codemirror/state";
 
 // Regex patterns ported from the old Swift MarkdownTextView
 const TASK_LIST_RE = /^(\s*)([-*+])\s\[[ xX]\]\s/;
@@ -22,10 +22,10 @@ function smartEnter(view: EditorView): boolean {
 	if (match) {
 		const marker = match[0];
 		const contentAfter = lineText.slice(marker.length);
-		if (contentAfter.trim() === '' && cursorInLine <= marker.length) {
+		if (contentAfter.trim() === "" && cursorInLine <= marker.length) {
 			// Empty item — remove marker
 			view.dispatch({
-				changes: { from: line.from, to: line.to, insert: '' },
+				changes: { from: line.from, to: line.to, insert: "" },
 				selection: { anchor: line.from },
 			});
 			return true;
@@ -45,9 +45,9 @@ function smartEnter(view: EditorView): boolean {
 	if (match) {
 		const marker = match[0];
 		const contentAfter = lineText.slice(marker.length);
-		if (contentAfter.trim() === '' && cursorInLine <= marker.length) {
+		if (contentAfter.trim() === "" && cursorInLine <= marker.length) {
 			view.dispatch({
-				changes: { from: line.from, to: line.to, insert: '' },
+				changes: { from: line.from, to: line.to, insert: "" },
 				selection: { anchor: line.from },
 			});
 			return true;
@@ -65,9 +65,9 @@ function smartEnter(view: EditorView): boolean {
 	if (match) {
 		const marker = match[0];
 		const contentAfter = lineText.slice(marker.length);
-		if (contentAfter.trim() === '' && cursorInLine <= marker.length) {
+		if (contentAfter.trim() === "" && cursorInLine <= marker.length) {
 			view.dispatch({
-				changes: { from: line.from, to: line.to, insert: '' },
+				changes: { from: line.from, to: line.to, insert: "" },
 				selection: { anchor: line.from },
 			});
 			return true;
@@ -87,7 +87,7 @@ function smartEnter(view: EditorView): boolean {
 
 export const smartListExtension: Extension = keymap.of([
 	{
-		key: 'Enter',
+		key: "Enter",
 		run: smartEnter,
 	},
 ]);

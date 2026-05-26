@@ -1,16 +1,32 @@
-import { EditorView, keymap, lineNumbers, highlightActiveLine, highlightActiveLineGutter, drawSelection, rectangularSelection } from '@codemirror/view';
-import { EditorState } from '@codemirror/state';
-import { defaultKeymap, history, historyKeymap, indentWithTab } from '@codemirror/commands';
-import { markdown, markdownLanguage } from '@codemirror/lang-markdown';
-import { syntaxHighlighting, defaultHighlightStyle, bracketMatching, indentOnInput, foldGutter, foldKeymap, codeFolding } from '@codemirror/language';
-import { searchKeymap, highlightSelectionMatches } from '@codemirror/search';
-import { smartListExtension } from './smart-lists';
-import { formattingKeymap } from './formatting';
+import {
+	EditorView,
+	keymap,
+	lineNumbers,
+	highlightActiveLine,
+	highlightActiveLineGutter,
+	drawSelection,
+	rectangularSelection,
+} from "@codemirror/view";
+import { EditorState } from "@codemirror/state";
+import { defaultKeymap, history, historyKeymap, indentWithTab } from "@codemirror/commands";
+import { markdown, markdownLanguage } from "@codemirror/lang-markdown";
+import {
+	syntaxHighlighting,
+	defaultHighlightStyle,
+	bracketMatching,
+	indentOnInput,
+	foldGutter,
+	foldKeymap,
+	codeFolding,
+} from "@codemirror/language";
+import { searchKeymap, highlightSelectionMatches } from "@codemirror/search";
+import { smartListExtension } from "./smart-lists";
+import { formattingKeymap } from "./formatting";
 
 export function createEditorState(
 	content: string,
 	onUpdate: (content: string) => void,
-	onCursorChange: (line: number, col: number) => void
+	onCursorChange: (line: number, col: number) => void,
 ): EditorState {
 	return EditorState.create({
 		doc: content,
@@ -54,9 +70,6 @@ export function createEditorState(
 	});
 }
 
-export function createEditorView(
-	parent: HTMLElement,
-	state: EditorState
-): EditorView {
+export function createEditorView(parent: HTMLElement, state: EditorState): EditorView {
 	return new EditorView({ state, parent });
 }

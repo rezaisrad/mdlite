@@ -1,50 +1,44 @@
-export type ViewMode = 'editor' | 'preview' | 'split';
+export type ViewMode = "editor" | "preview" | "split";
 
-export type FontFamily = 'system' | 'serif' | 'classic' | 'humanist' | 'mono';
+export type FontFamily = "system" | "serif" | "classic" | "humanist" | "mono";
 
 export const FONT_STACKS: Record<FontFamily, { label: string; css: string }> = {
 	system: {
-		label: 'System',
+		label: "System",
 		css: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif",
 	},
 	serif: {
-		label: 'Serif',
+		label: "Serif",
 		css: "Charter, 'Bitstream Charter', 'Sitka Text', Cambria, serif",
 	},
 	classic: {
-		label: 'Classic',
+		label: "Classic",
 		css: "'Iowan Old Style', 'Palatino Linotype', 'URW Palladio L', P052, serif",
 	},
 	humanist: {
-		label: 'Humanist',
+		label: "Humanist",
 		css: "Seravek, 'Gill Sans Nova', Ubuntu, Calibri, 'DejaVu Sans', source-sans-pro, sans-serif",
 	},
 	mono: {
-		label: 'Mono',
+		label: "Mono",
 		css: "'SF Mono', SFMono-Regular, ui-monospace, Menlo, Consolas, monospace",
 	},
 };
 
 class DocumentState {
-	content = $state('');
+	content = $state("");
 	filePath = $state<string | null>(null);
 	isDirty = $state(false);
-	viewMode = $state<ViewMode>('split');
+	viewMode = $state<ViewMode>("split");
 	showSidebar = $state(false);
 	zoomLevel = $state(100);
-	fontFamily = $state<FontFamily>('system');
+	fontFamily = $state<FontFamily>("system");
 	cursorLine = $state(1);
 	cursorCol = $state(1);
 
-	fileName = $derived(
-		this.filePath
-			? this.filePath.split('/').pop() ?? 'Untitled'
-			: 'Untitled'
-	);
+	fileName = $derived(this.filePath ? (this.filePath.split("/").pop() ?? "Untitled") : "Untitled");
 
-	windowTitle = $derived(
-		(this.isDirty ? '* ' : '') + this.fileName + ' — MDLite'
-	);
+	windowTitle = $derived((this.isDirty ? "* " : "") + this.fileName + " — MDLite");
 
 	private stats = $derived.by(() => {
 		const text = this.content;
@@ -66,9 +60,15 @@ class DocumentState {
 		return { words, lines, chars: text.length };
 	});
 
-	get wordCount() { return this.stats.words; }
-	get lineCount() { return this.stats.lines; }
-	get charCount() { return this.stats.chars; }
+	get wordCount() {
+		return this.stats.words;
+	}
+	get lineCount() {
+		return this.stats.lines;
+	}
+	get charCount() {
+		return this.stats.chars;
+	}
 
 	setContent(content: string, markDirty = true) {
 		this.content = content;
@@ -101,7 +101,7 @@ class DocumentState {
 	}
 
 	reset() {
-		this.content = '';
+		this.content = "";
 		this.filePath = null;
 		this.isDirty = false;
 		this.cursorLine = 1;

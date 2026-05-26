@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { doc } from '$lib/state/document.svelte';
+	import { doc } from "$lib/state/document.svelte";
 </script>
 
 <div class="status-bar">

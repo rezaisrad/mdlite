@@ -1,5 +1,5 @@
-import { EditorView, keymap } from '@codemirror/view';
-import type { Extension } from '@codemirror/state';
+import { EditorView, keymap } from "@codemirror/view";
+import type { Extension } from "@codemirror/state";
 
 function wrapSelection(view: EditorView, prefix: string, suffix: string): boolean {
 	const { from, to } = view.state.selection.main;
@@ -40,7 +40,7 @@ function toggleLinePrefix(view: EditorView, prefix: string): boolean {
 
 	if (line.text.startsWith(prefix)) {
 		view.dispatch({
-			changes: { from: line.from, to: line.from + prefix.length, insert: '' },
+			changes: { from: line.from, to: line.from + prefix.length, insert: "" },
 		});
 	} else {
 		view.dispatch({
@@ -63,10 +63,10 @@ function insertLinkAtCursor(view: EditorView): boolean {
 }
 
 export const formattingKeymap: Extension = keymap.of([
-	{ key: 'Mod-b', run: (v) => wrapSelection(v, '**', '**') },
-	{ key: 'Mod-i', run: (v) => wrapSelection(v, '*', '*') },
-	{ key: 'Mod-`', run: (v) => wrapSelection(v, '`', '`') },
-	{ key: 'Mod-Shift-h', run: (v) => toggleLinePrefix(v, '# ') },
-	{ key: 'Mod-k', run: insertLinkAtCursor },
-	{ key: 'Mod-Shift-l', run: (v) => toggleLinePrefix(v, '- ') },
+	{ key: "Mod-b", run: (v) => wrapSelection(v, "**", "**") },
+	{ key: "Mod-i", run: (v) => wrapSelection(v, "*", "*") },
+	{ key: "Mod-`", run: (v) => wrapSelection(v, "`", "`") },
+	{ key: "Mod-Shift-h", run: (v) => toggleLinePrefix(v, "# ") },
+	{ key: "Mod-k", run: insertLinkAtCursor },
+	{ key: "Mod-Shift-l", run: (v) => toggleLinePrefix(v, "- ") },
 ]);

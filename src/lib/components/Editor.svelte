@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import type { EditorView } from '@codemirror/view';
-	import { createEditorState, createEditorView } from '$lib/codemirror/setup';
+	import { onMount } from "svelte";
+	import type { EditorView } from "@codemirror/view";
+	import { createEditorState, createEditorView } from "$lib/codemirror/setup";
 
 	let {
-		content = '',
+		content = "",
 		onchange,
 		oncursorchange,
 		editorRef = $bindable<EditorView | null>(null),

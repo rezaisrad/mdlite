@@ -1,11 +1,11 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
-	import { getSystemTheme, onThemeChange } from '$lib/theme';
-	import type { Snippet } from 'svelte';
+	import { onMount } from "svelte";
+	import { getSystemTheme, onThemeChange } from "$lib/theme";
+	import type { Snippet } from "svelte";
 
 	let { children }: { children: Snippet } = $props();
 
-	let theme = $state<'light' | 'dark'>('light');
+	let theme = $state<"light" | "dark">("light");
 
 	onMount(() => {
 		theme = getSystemTheme();
@@ -14,7 +14,7 @@
 	});
 
 	$effect(() => {
-		document.documentElement.classList.toggle('dark', theme === 'dark');
+		document.documentElement.classList.toggle("dark", theme === "dark");
 	});
 </script>
 
