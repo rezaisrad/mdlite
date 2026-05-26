@@ -80,6 +80,7 @@
 			doc.setContent(content, false);
 			doc.setFilePath(path);
 			doc.markClean();
+			ignoreNextFileChange = true;
 			await invoke('start_watching', { path });
 		} catch (e) {
 			console.error('Failed to open file:', e);
@@ -323,6 +324,7 @@
 				doc.setContent(content, false);
 				doc.setFilePath(savedFilePath);
 				doc.markClean();
+				ignoreNextFileChange = true;
 				await invoke('start_watching', { path: savedFilePath });
 			} catch {
 				if (savedContent) {
